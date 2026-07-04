@@ -106,19 +106,35 @@
         </div>
         <div class="attractions-grid">
 
-          <article class="attraction-card reveal" id="temple">
-            <div class="card-image">
-              <img src="https://images.unsplash.com/photo-1582515073490-39981397c445?w=600&q=80" alt="Sri Lakshmi Narasimha Swamy Temple placeholder">
-              <span class="card-badge">Spiritual</span>
+          <article class="attraction-card reveal temple-section" id="temple">
+            <div class="temple-card-row">
+              <div class="card-image">
+                <img
+                  id="templeHeroImg"
+                  src="images/temple/hero.jpg"
+                  data-fallback="https://images.unsplash.com/photo-1582515073490-39981397c445?w=600&q=80"
+                  alt="Sri Lakshmi Narasimha Swamy Temple">
+                <span class="card-badge">Spiritual</span>
+              </div>
+              <div class="card-body">
+                <h3>Sri Lakshmi Narasimha Swamy Temple</h3>
+                <p>Built in the 15th–16th century, this Dravidian temple is revered as Dakshina Kashi with a uniquely west-facing deity.</p>
+                <ul class="card-meta">
+                  <li>6 AM – 7:30 PM</li>
+                  <li>Sakinetipalli Mandal</li>
+                </ul>
+                <a href="#contact" class="card-link">Plan Visit →</a>
+              </div>
             </div>
-            <div class="card-body">
-              <h3>Sri Lakshmi Narasimha Swamy Temple</h3>
-              <p>Built in the 15th–16th century, this Dravidian temple is revered as Dakshina Kashi with a uniquely west-facing deity.</p>
-              <ul class="card-meta">
-                <li>6 AM – 7:30 PM</li>
-                <li>Sakinetipalli Mandal</li>
-              </ul>
-              <a href="#contact" class="card-link">Plan Visit →</a>
+            <div class="temple-media">
+              <div class="temple-media-block">
+                <h4 class="temple-media-title">Temple Photos</h4>
+                <div class="temple-gallery" id="templeGallery" aria-label="Temple photo gallery"></div>
+              </div>
+              <div class="temple-media-block">
+                <h4 class="temple-media-title">Temple Videos</h4>
+                <div class="temple-videos" id="templeVideos" aria-label="Temple videos"></div>
+              </div>
             </div>
           </article>
 

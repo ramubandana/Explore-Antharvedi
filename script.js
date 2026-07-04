@@ -9,6 +9,79 @@
   const revealElements = document.querySelectorAll('.reveal');
   const contactForm = document.getElementById('contactForm');
 
+  /* ── Local media paths (add files to these folders) ── */
+  const TEMPLE_IMAGES_DIR = 'images/temple/';
+  const TEMPLE_VIDEOS_DIR = 'videos/temple/';
+  const TEMPLE_IMAGE_FILES = ['hero.jpg', '01.jpg', '02.jpg', '03.jpg', '04.jpg', '05.jpg', '06.jpg'];
+  const TEMPLE_VIDEO_FILES = ['01.mp4', '02.mp4', 'tour.mp4'];
+
+  function probeImage(src) {
+    return new Promise(resolve => {
+      const img = new Image();
+      img.onload = () => resolve(src);
+      img.onerror = () => resolve(null);
+      img.src = src;
+    });
+  }
+
+  function probeVideo(src) {
+    return new Promise(resolve => {
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      video.onloadedmetadata = () => resolve(src);
+      video.onerror = () => resolve(null);
+      video.src = src;
+    });
+  }
+
+  async function loadExistingFiles(dir, files, probe) {
+    const results = await Promise.all(
+      files.map(file => probe(`${dir}${file}`))
+    );
+    return results.filter(Boolean);
+  }
+
+  async function initTempleMedia() {
+    const heroImg = document.getElementById('templeHeroImg');
+    const galleryEl = document.getElementById('templeGallery');
+    const videosEl = document.getElementById('templeVideos');
+    if (!heroImg || !galleryEl || !videosEl) return;
+
+    const fallback = heroImg.dataset.fallback;
+    const images = await loadExistingFiles(TEMPLE_IMAGES_DIR, TEMPLE_IMAGE_FILES, probeImage);
+    const videos = await loadExistingFiles(TEMPLE_VIDEOS_DIR, TEMPLE_VIDEO_FILES, probeVideo);
+
+    const heroSrc = images.find(src => src.endsWith('hero.jpg')) || images[0] || fallback;
+    heroImg.src = heroSrc;
+    heroImg.onerror = () => { heroImg.src = fallback; };
+
+    const galleryImages = images.filter(src => !src.endsWith('hero.jpg'));
+
+    if (galleryImages.length) {
+      galleryEl.innerHTML = galleryImages.map(src => `
+        <figure class="temple-gallery-item">
+          <img src="${src}" alt="Sri Lakshmi Narasimha Swamy Temple">
+        </figure>
+      `).join('');
+    } else {
+      galleryEl.innerHTML = '<p class="temple-media-empty">Add photos to <code>images/temple/</code> (e.g. 01.jpg, 02.jpg)</p>';
+    }
+
+    if (videos.length) {
+      videosEl.innerHTML = videos.map(src => `
+        <div class="temple-video-item">
+          <video controls preload="metadata" playsinline>
+            <source src="${src}" type="video/mp4">
+          </video>
+        </div>
+      `).join('');
+    } else {
+      videosEl.innerHTML = '<p class="temple-media-empty">Add videos to <code>videos/temple/</code> (e.g. 01.mp4, tour.mp4)</p>';
+    }
+  }
+
+  initTempleMedia();
+
   /* ── Sticky header ── */
   function onScroll() {
     header.classList.toggle('scrolled', window.scrollY > 50);
@@ -122,7 +195,7 @@
 
   /* ── Attraction card tilt on hover (desktop) ── */
   if (window.matchMedia('(hover: hover)').matches) {
-    document.querySelectorAll('.attraction-card').forEach(card => {
+    document.querySelectorAll('.attraction-card:not(.temple-section)').forEach(card => {
       card.addEventListener('mousemove', e => {
         const rect = card.getBoundingClientRect();
         const x = (e.clientX - rect.left) / rect.width - 0.5;
